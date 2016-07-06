@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strings"
 	"text/template"
 	"time"
 )
@@ -49,34 +48,6 @@ func hitServer(w http.ResponseWriter, r *http.Request) {
 	if reg.StatusCode != 0 {
 		w.WriteHeader(reg.StatusCode)
 	}
-
-	if strings.TrimSpace(reg.URL) != "" {
-		hitExternalServer(reg, w)
-	} else {
-		fmt.Fprint(w, "Done ")
-	}
-
-}
-
-func hitExternalServer(regParam *Request, w http.ResponseWriter) {
-
-	resp, err := http.Get(regParam.URL)
-	if err != nil {
-		fmt.Printf("failed to get valid response. Err: %s \n", err.Error())
-		w.WriteHeader(500)
-		fmt.Fprintf(w, "Err: %s \n", err.Error())
-	} else {
-		//Dont Print the endpoint response as we dont need it
-		//fmt.Fprintf(w, "%s :: Response %s", regParam.URL, string(body))
-		fmt.Fprintf(w, "%s :: Done ", regParam.URL)
-	}
-	if regParam.StatusCode != 0 {
-		w.WriteHeader(regParam.StatusCode)
-	} else {
-		if resp != nil {
-			w.WriteHeader(resp.StatusCode)
-		}
-
-	}
+	fmt.Fprint(w, "Done ")
 
 }
